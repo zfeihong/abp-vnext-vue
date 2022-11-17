@@ -1,6 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Volo.Abp.AuditLogging;
+using Volo.Abp.Data;
 using Volo.Abp.Identity;
 using Volo.Abp.ObjectExtending;
+using Volo.Abp.PermissionManagement;
 using Volo.Abp.Threading;
 
 namespace Gm.EntityFrameworkCore;
@@ -16,29 +19,28 @@ public static class GmEfCoreEntityExtensionMappings
 
         OneTimeRunner.Run(() =>
         {
-                /* You can configure extra properties for the
-                 * entities defined in the modules used by your application.
-                 *
-                 * This class can be used to map these extra properties to table fields in the database.
-                 *
-                 * USE THIS CLASS ONLY TO CONFIGURE EF CORE RELATED MAPPING.
-                 * USE GmModuleExtensionConfigurator CLASS (in the Domain.Shared project)
-                 * FOR A HIGH LEVEL API TO DEFINE EXTRA PROPERTIES TO ENTITIES OF THE USED MODULES
-                 *
-                 * Example: Map a property to a table field:
+            /* 配置实体扩展属性以及EF CORE相关映射
+             *
+             * 使用 GmModuleExtensionConfigurator 类 (在Domain.Shared项目中)
+             * 定义实体的扩展属性
+             *
+             * Demo: 映射属性到表格字段:
+                 ObjectExtensionManager.Instance
+                     .MapEfCoreProperty<IdentityUser, string>(
+                         "MyProperty",
+                         (entityBuilder, propertyBuilder) =>
+                         {
+                             propertyBuilder.HasMaxLength(128);
+                         }
+                     );
+             * 更多详情:
+             * https://docs.abp.io/en/abp/latest/Customizing-Application-Modules-Extending-Entities
+             */
 
-                     ObjectExtensionManager.Instance
-                         .MapEfCoreProperty<IdentityUser, string>(
-                             "MyProperty",
-                             (entityBuilder, propertyBuilder) =>
-                             {
-                                 propertyBuilder.HasMaxLength(128);
-                             }
-                         );
-
-                 * See the documentation for more:
-                 * https://docs.abp.io/en/abp/latest/Customizing-Application-Modules-Extending-Entities
-                 */
+            AbpCommonDbProperties.DbTablePrefix = "gm";
+            AbpIdentityDbProperties.DbTablePrefix = "ids";
+            AbpAuditLoggingDbProperties.DbTablePrefix = "log";
+            AbpPermissionManagementDbProperties.DbTablePrefix = "auth";
         });
     }
 }

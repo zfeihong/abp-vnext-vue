@@ -1,0 +1,10 @@
+﻿namespace Gm.SettingManagement;
+
+public class SettingManagementFeatures
+{
+    public const string GroupName = "SettingManagement";
+
+    public const string Enable = GroupName + ".Enable";
+
+    public const string AllowChangingEmailSettings = GroupName + ".AllowChangingEmailSettings";
+}
